@@ -1,0 +1,71 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="my-4">
+    <h1>{{ post.title }}</h1>
+    <p class="text-muted">{{ post.author }} - {{ post.created_at }}</p>
+    <div class="content">
+        <p>{{ post.content }}</p>
+    </div>
+    <a href="{% url 'post_list' %}" class="btn btn-primary">Back to Blog</a>
+</div>
+
+<h2>Comments</h2>
+<div class="comments-section">
+    {% for comment in comments %}
+        <div class="comment mb-3">
+            <p><strong>{{ comment.author }}</strong> - {{ comment.created_at }}</p>
+            <p>{{ comment.content }}</p>
+            <div class="emoji-reactions">
+                {% for emoji, count in comment.get_reactions.items %}
+                    <span>{{ emoji }}: {{ count }}</span>
+                {% endfor %}
+            </div>
+            <div class="emoji-picker" data-comment-id="{{ comment.id }}"></div>
+        </div>
+        <hr> <!-- Add this line to separate comments -->
+    {% endfor %}
+</div>
+
+<h2>Add a comment</h2>
+<form method="POST" class="comment-form">
+    {% csrf_token %}
+    <div class="form-group">
+        <textarea class="form-control" name="content" rows="3" placeholder="Write a comment..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Comment</button>
+</form>
+
+<script src="https://unpkg.com/emoji-mart@latest/dist/emoji-mart.js"></script>
+<script>
+    document.querySelectorAll('.emoji-picker').forEach(picker => {
+        new EmojiMart.Picker({
+            onEmojiSelect: emoji => {
+                console.log('Selected emoji:', emoji);  // Debugging line
+                const commentId = picker.getAttribute('data-comment-id');
+                fetch("{% url 'post_detail' post.pk %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        emoji: emoji.native,
+                        comment_id: commentId
+                    })
+                }).then(response => response.json()).then(data => {
+                    console.log('Server response:', data);  // Debugging line
+                    if (data.status === 'success') {
+                        location.reload();
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);  // Debugging line
+                });
+            },
+            theme: 'light'
+        }).render(picker);
+    });
+</script>
+{% endblock %}

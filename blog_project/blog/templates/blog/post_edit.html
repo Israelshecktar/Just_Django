@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}New Post{% endblock %}
+
+{% block content %}
+<h1 class="my-4">New Post</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+<a href="{% url 'post_list' %}" class="btn btn-primary mt-3">Back to Blog</a>
+{% endblock %}
