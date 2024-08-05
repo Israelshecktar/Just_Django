@@ -16,6 +16,7 @@ class Comment(models.Model):
     author = models.CharField(max_length=100, default='Anonymous')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
     reactions = models.TextField(default='{}')  # Store reactions as a JSON string
 
     def __str__(self):
@@ -32,3 +33,14 @@ class Comment(models.Model):
             reactions[emoji] = 1
         self.reactions = json.dumps(reactions)
         self.save()
+
+    def get_replies(self):
+        return self.replies.all()  # Removed is_approved=True
+
+class Reaction(models.Model):
+    comment = models.ForeignKey(Comment, related_name='reaction_set', on_delete=models.CASCADE)
+    emoji = models.CharField(max_length=10)
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.emoji} - {self.count}'

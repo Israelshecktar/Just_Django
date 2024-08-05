@@ -14,29 +14,51 @@
 
 <h2>Comments</h2>
 <div class="comments-section">
-    {% for comment in comments %}
-        <div class="comment mb-3">
-            <p><strong>{{ comment.author }}</strong> - {{ comment.created_at }}</p>
-            <p>{{ comment.content }}</p>
-            <div class="emoji-reactions">
-                {% for emoji, count in comment.get_reactions.items %}
-                    <span>{{ emoji }}: {{ count }}</span>
+    {% if user.is_authenticated %}
+        {% for comment in comments %}
+            <div class="comment mb-3">
+                <p><strong>{{ comment.author }}</strong> - {{ comment.created_at }}</p>
+                <p>{{ comment.content }}</p>
+                <div class="emoji-reactions">
+                    {% for reaction in comment.reaction_set.all %}
+                        <span>{{ reaction.emoji }}: {{ reaction.count }}</span>
+                    {% endfor %}
+                </div>
+                <div class="emoji-picker" data-comment-id="{{ comment.id }}"></div>
+                <a href="#" class="reply-link" data-comment-id="{{ comment.id }}">Reply</a>
+                {% for reply in comment.get_replies %}
+                    <div class="reply ml-4">
+                        <p><strong>{{ reply.author }}</strong> - {{ reply.created_at }}</p>
+                        <p>{{ reply.content }}</p>
+                        <div class="emoji-reactions">
+                            {% for reaction in reply.reaction_set.all %}
+                                <span>{{ reaction.emoji }}: {{ reaction.count }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="emoji-picker" data-comment-id="{{ reply.id }}"></div>
+                    </div>
                 {% endfor %}
             </div>
-            <div class="emoji-picker" data-comment-id="{{ comment.id }}"></div>
-        </div>
-        <hr> <!-- Add this line to separate comments -->
-    {% endfor %}
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>Please <a href="{% url 'login' %}">log in</a> to view and add comments.</p>
+    {% endif %}
 </div>
 
-<h2>Add a comment</h2>
-<form method="POST" class="comment-form">
-    {% csrf_token %}
-    <div class="form-group">
-        <textarea class="form-control" name="content" rows="3" placeholder="Write a comment..."></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Comment</button>
-</form>
+{% if user.is_authenticated %}
+    <h2>Add a comment</h2>
+    <form method="POST" class="comment-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea class="form-control" name="content" rows="3" placeholder="Write a comment..."></textarea>
+            <input type="hidden" name="parent_id" id="parent_id">
+        </div>
+        <button type="submit" class="btn btn-primary">Comment</button>
+    </form>
+{% else %}
+    <p>Please <a href="{% url 'login' %}">log in</a> to add a comment.</p>
+{% endif %}
 
 <script src="https://unpkg.com/emoji-mart@latest/dist/emoji-mart.js"></script>
 <script>
@@ -66,6 +88,15 @@
             },
             theme: 'light'
         }).render(picker);
+    });
+
+    document.querySelectorAll('.reply-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const commentId = this.getAttribute('data-comment-id');
+            document.getElementById('parent_id').value = commentId;
+            document.querySelector('.comment-form textarea').focus();
+        });
     });
 </script>
 {% endblock %}

@@ -12,14 +12,23 @@
             padding-top: 56px;
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa; /* Light grey background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
         }
         .footer {
             font-size: 12px;
-            margin: 50px 0px 10px;
             text-align: right;
+            background-color: #f8f9fa; /* Light grey background */
+            padding: 10px 0;
         }
         .footer .container {
-            padding: 0
+            display: flex;
+            justify-content: flex-end;
+            padding: 0;
         }
         .navbar-brand, .nav-link, .footer span {
             color: #343a40 !important; /* Dark grey color for text */

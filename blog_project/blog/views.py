@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Post, Comment
+from .models import Post, Comment, Reaction
 from .forms import PostForm, CommentForm, SignUpForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from .forms import CommentForm
+import json
 
 def post_list(request):
     query = request.GET.get('q')
@@ -27,27 +28,33 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = post.comments.all()
+    comments = post.comments.filter(parent__isnull=True)  # Removed is_approved=True
     if request.method == 'POST':
-        if 'content' in request.POST:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            data = json.loads(request.body)
+            comment_id = data.get('comment_id')
+            emoji = data.get('emoji')
+            comment = get_object_or_404(Comment, id=comment_id)
+            reaction, created = Reaction.objects.get_or_create(comment=comment, emoji=emoji)
+            reaction.count += 1
+            reaction.save()
+            return JsonResponse({'status': 'success'})
+        else:
             form = CommentForm(request.POST)
             if form.is_valid():
                 comment = form.save(commit=False)
                 comment.post = post
                 comment.author = request.user.username if request.user.is_authenticated else 'Anonymous'
+                parent_id = request.POST.get('parent_id')
+                if parent_id:
+                    comment.parent = Comment.objects.get(id=parent_id)
                 comment.save()
                 return redirect('post_detail', pk=post.pk)
-        elif 'emoji' in request.POST:
-            comment_id = request.POST.get('comment_id')
-            emoji = request.POST.get('emoji')
-            comment = get_object_or_404(Comment, id=comment_id)
-            comment.add_reaction(emoji)
-            return JsonResponse({'status': 'success'})
     else:
         form = CommentForm()
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments, 'form': form})
 
-
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -59,6 +66,7 @@ def post_new(request):
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
 
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
