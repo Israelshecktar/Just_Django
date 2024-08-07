@@ -1,0 +1,78 @@
+<!-- templates/blog/trending_posts.html -->
+<div class="trending-section">
+    <h2 class="trending-title">Trending Blogs</h2>
+    <ul class="trending-list">
+        {% for post in trending_posts %}
+            <li class="trending-item">
+                <a href="{% url 'post_detail' post.pk %}" class="trending-link">
+                    <div class="trending-icon">
+                        {% if forloop.counter0|divisibleby:3 %}
+                            <i class="fas fa-fire"></i>
+                        {% elif forloop.counter0|divisibleby:3 == 1 %}
+                            <i class="fas fa-fire-alt"></i>
+                        {% else %}
+                            <i class="fas fa-burn"></i>
+                        {% endif %}
+                    </div>
+                    <div class="trending-content">
+                        <h5 class="trending-post-title">{{ post.title }}</h5>
+                        <p class="trending-post-snippet">{{ post.content|truncatewords:10 }}</p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<style>
+    .trending-section {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .trending-title {
+        color: #004d40;
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+    .trending-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .trending-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        transition: background-color 0.3s;
+    }
+    .trending-item:hover {
+        background-color: #f1f1f1;
+        border-radius: 5px;
+    }
+    .trending-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #004d40;
+        width: 100%;
+        padding: 8px;
+    }
+    .trending-icon {
+        font-size: 20px;
+        margin-right: 8px;
+        color: #ff5722;
+    }
+    .trending-content {
+        flex: 1;
+    }
+    .trending-post-title {
+        font-size: 16px;
+        margin: 0;
+    }
+    .trending-post-snippet {
+        font-size: 12px;
+        color: #757575;
+        margin: 0;
+    }
+</style>

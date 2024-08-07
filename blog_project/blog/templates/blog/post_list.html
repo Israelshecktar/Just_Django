@@ -3,65 +3,78 @@
 {% block title %}Blog Posts{% endblock %}
 
 {% block content %}
-<h1 class="my-4">Blog Posts</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-12">
+        <form method="GET" action="{% url 'post_list' %}" class="form-inline my-2 my-lg-0 justify-content-center search-form">
+            <input class="form-control mr-sm-2 w-75" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ query|default:'' }}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
 
-<form method="GET" action="{% url 'post_list' %}" class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ query|default:'' }}">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form>
-
-<!-- Button to Open the Modal -->
-<button type="button" class="btn btn-success my-4" data-toggle="modal" data-target="#newPostModal">
-    Create New Post
-</button>
-
-<!-- The Modal -->
-<div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newPostModalLabel">Create a New Post</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'post_new' %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-success">Save</button>
-                </form>
-            </div>
+        <!-- Button to Open the Modal -->
+        <div class="text-center my-4">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newPostModal">
+                Create New Post
+            </button>
         </div>
-    </div>
-</div>
 
-<div class="row mt-4">
-    {% for post in page_obj %}
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm" style="height: 100%;">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h5>
-                    <p class="card-text flex-grow-1">{{ post.content|truncatewords:30 }}</p>
-                    <p class="card-text"><small class="text-muted">{{ post.author }} - {{ post.created_at }}</small></p>
-                    <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary mt-auto">Read More</a>
+        <!-- The Modal -->
+        <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newPostModalLabel">Create a New Post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{% url 'post_new' %}">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
+
+        <div class="row mt-4">
+            {% for post in page_obj %}
+                <div class="col-lg-6 col-md-12 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h5>
+                            <p class="card-text flex-grow-1">{{ post.content|truncatewords:30 }}</p>
+                            <p class="card-text"><small class="text-muted">{{ post.author }} - {{ post.created_at }}</small></p>
+                            <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary mt-auto">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">« First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><a class="page-link">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    <div class="col-lg-4 col-md-12">
+        {% include 'blog/trending_posts.html' %}
+    </div>
 </div>
 
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page=1">« First</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-        {% endif %}
-        <li class="page-item active"><a class="page-link">{{ page_obj.number }}</a></li>
-        {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a></li>
-        {% endif %}
-    </ul>
-</nav>
+<style>
+    .search-form {
+        margin-top: 60px;
+    }
+</style>
 {% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Post, Comment, Reaction
 from .forms import PostForm, CommentForm, SignUpForm
-from django.db.models import Q
+from django.db.models import Q, Count, Sum, F
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 import json
@@ -23,8 +23,22 @@ def post_list(request):
     paginator = Paginator(posts, 5)  # Show 5 posts per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
-    return render(request, 'blog/post_list.html', {'page_obj': page_obj, 'query': query})
+
+    # Fetch top 10 most interactive blogs
+    trending_posts = Post.objects.annotate(
+        comment_count=Count('comments'),
+        reaction_count=Sum('comments__reaction_set__count')
+    ).annotate(
+        interaction_count=F('comment_count') + F('reaction_count')
+    ).order_by('-interaction_count')[:10]
+
+    context = {
+        'page_obj': page_obj,
+        'query': query,
+        'trending_posts': trending_posts,
+    }
+    return render(request, 'blog/post_list.html', context)
+
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)

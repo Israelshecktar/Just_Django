@@ -1,42 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load static %}
     <title>{% block title %}Blog{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Calming:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         body {
-            padding-top: 56px;
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa; /* Light grey background */
+            padding-top: 70px; /* Increased top padding */
+            font-family: 'Calming', sans-serif;
+            background-color: #e0f7fa; /* Lightest shade of blue */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        .container {
+        .container-fluid {
             flex: 1;
+            padding-left: 30px;
+            padding-right: 30px;
         }
         .footer {
             font-size: 12px;
             text-align: right;
-            background-color: #f8f9fa; /* Light grey background */
+            background-color: #e0f7fa;
             padding: 10px 0;
         }
-        .footer .container {
+        .footer .container-fluid {
             display: flex;
             justify-content: flex-end;
-            padding: 0;
+            padding: 10px;
         }
         .navbar-brand, .nav-link, .footer span {
-            color: #343a40 !important; /* Dark grey color for text */
+            color: #004d40 !important; /* Dark teal for text */
+        }
+        .navbar {
+            background-color: #4db6ac !important; /* Teal for navbar */
+        }
+        .btn-primary {
+            background-color: #004d40 !important; /* Dark teal for buttons */
+            border-color: #004d40 !important;
+        }
+        .btn-primary:hover {
+            background-color: #00251a !important; /* Darker teal for hover state */
+            border-color: #00251a !important;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <a class="navbar-brand" href="{% url 'post_list' %}">Shecktar Blog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -52,20 +68,18 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
+                        <a class="nav-link" href="{% url 'login' %}">Login</a></li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-                    </li>
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
-    <div class="container">
+    <div class="container-fluid">
         {% block content %}{% endblock %}
     </div>
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
+    <footer class="footer mt-auto py-3">
+        <div class="container-fluid">
             <span class="text-muted">© 2024 Shecktar Blog. All rights reserved.</span>
         </div>
     </footer>    
