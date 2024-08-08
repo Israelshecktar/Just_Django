@@ -16,9 +16,10 @@
                     </div>
                     <div class="trending-content">
                         <h5 class="trending-post-title">{{ post.title }}</h5>
-                        <p class="trending-post-snippet">{{ post.content|truncatewords:10 }}</p>
+                        <p class="trending-post-comments">{{ post.comment_count }} comments</p>
                     </div>
                 </a>
+                <hr class="trending-divider">
             </li>
         {% endfor %}
     </ul>
@@ -70,9 +71,13 @@
         font-size: 16px;
         margin: 0;
     }
-    .trending-post-snippet {
+    .trending-post-comments {
         font-size: 12px;
         color: #757575;
         margin: 0;
+    }
+    .trending-divider {
+        border: 0.5px solid #e0e0e0;
+        margin: 5px 0;
     }
 </style>
