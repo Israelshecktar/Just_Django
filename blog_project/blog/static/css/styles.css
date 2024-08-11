@@ -1,0 +1,218 @@
+/* styles.css */
+body {
+    padding-top: 70px; /* Increased top padding */
+    font-family: 'Calming', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container-fluid {
+    flex: 1;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.footer {
+    font-size: 12px;
+    text-align: right;
+    padding: 10px 0;
+}
+.footer .container-fluid {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+.navbar-brand, .nav-link, .footer span {
+    color: #004d40 !important; /* Dark teal for text */
+}
+.navbar {
+    background-color: #4db6ac !important; /* Teal for navbar */
+}
+.btn-primary {
+    background-color: #004d40 !important; /* Dark teal for buttons */
+    border-color: #004d40 !important;
+}
+.btn-primary:hover {
+    background-color: #00251a !important; /* Darker teal for hover state */
+    border-color: #00251a !important;
+}
+.profile-picture {
+    width: 50px; /* Standard size for profile picture */
+    height: 50px; 
+    object-fit: cover;
+    margin-left: 15px; /* Add some space between the profile picture and the toggle switch */
+}
+.nav-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.nav-icon i {
+    margin-bottom: 5px;
+}
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the toggle switch vertically */
+    margin-right: 15px; /* Add some space between the toggle switch and the profile picture */
+    padding-top: 20px; /* Add padding-top */
+}
+.theme-switch {
+    display: inline-block;
+    height: 35px;
+    position: relative;
+    width: 60px;
+}
+.theme-switch input {
+    display: none;
+}
+.slider {
+    background-color: hsl(148, 78%, 23%);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+.slider:before {
+    background-color: white;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+}
+input:checked + .slider {
+    background-color: #004d40; /* Updated color for dark mode toggle */
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+.slider.round {
+    border-radius: 34px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Trending Posts Section */
+.trending-section {
+    background-color: var(--background-color);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.trending-title {
+    color: var(--text-color);
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+.trending-list {
+    list-style-type: none;
+    padding: 0;
+}
+.trending-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: background-color 0.3s, color 0.3s; /* Added color transition */
+}
+.trending-item:hover {
+    background-color: var(--hover-background-color);
+    border-radius: 5px;
+}
+.trending-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    width: 100%;
+    padding: 8px;
+}
+.trending-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #ff5722;
+}
+.trending-content {
+    flex: 1;
+}
+.trending-post-title {
+    font-size: 16px;
+    margin: 0;
+}
+.trending-post-comments {
+    font-size: 12px;
+    color: var(--secondary-text-color);
+    margin: 0;
+}
+.trending-divider {
+    border: 0.5px solid var(--divider-color);
+    margin: 5px 0;
+}
+
+/* Light Theme Variables */
+:root {
+    --background-color: #ffffff;
+    --text-color: #004d40;
+    --hover-background-color: #f1f1f1;
+    --secondary-text-color: #757575;
+    --divider-color: #e0e0e0;
+}
+
+/* Dark Theme Variables */
+:root.dark {
+    --background-color: #333333;
+    --text-color: #ffffff;
+    --hover-background-color: #444444;
+    --secondary-text-color: #bbbbbb;
+    --divider-color: #555555;
+}
+
+/* Post List Page */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px; /* Optimized gap for card spacing */
+}
+.grid-item {
+    display: flex;
+    flex-direction: column;
+}
+.card {
+    aspect-ratio: 1 / 1; /* Keeps cards square */
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.card-title a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+.card-title a:hover {
+    text-decoration: underline;
+}
+.pagination .page-link {
+    color: #28a745;
+}
+.pagination .page-item.active .page-link {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+@media (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}

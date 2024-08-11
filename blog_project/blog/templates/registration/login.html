@@ -1,12 +1,22 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h2>Login</h2>
-<form method="POST" class="needs-validation" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<div class="container" style="padding-top: 15px;">
+    <div class="card mx-auto" style="max-width: 400px;">
+        <div class="card-body">
+            <div class="text-center">
+                <img src="{% static 'images/logo.png' %}" alt="App Logo" class="mb-4" style="width: 100px;">
+            </div>
+            <h2 class="text-center">Login</h2>
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

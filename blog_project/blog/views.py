@@ -2,12 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Post, Comment, Reaction, Category
+from .models import Post, Comment, Reaction, Category, ThemeConfiguration
 from .forms import PostForm, CommentForm, CustomUserCreationForm, CustomUserChangeForm
 from django.db.models import Q, Count, Sum, F
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 import json
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
 
 def post_list(request):
     query = request.GET.get('q')
@@ -131,4 +134,11 @@ def user_profile(request, username):
     user = get_object_or_404(get_user_model(), username=username)
     return render(request, 'registration/user_profile.html', {'profile_user': user})
 
-
+@require_POST
+def set_theme(request):
+    if request.user.is_authenticated:
+        data = json.loads(request.body)
+        theme = data.get('theme')
+        ThemeConfiguration.objects.update_or_create(user=request.user, defaults={'theme': theme})
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)

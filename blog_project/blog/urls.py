@@ -14,4 +14,5 @@ urlpatterns = [
     path('accounts/profile/update/', views.profile_update, name='profile_update'),
     path('accounts/profile/<str:username>/', views.user_profile, name='user_profile'),
     path('community/', views.community, name='community'),
+    path('set-theme/', views.set_theme, name='set_theme'),  # Corrected import
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

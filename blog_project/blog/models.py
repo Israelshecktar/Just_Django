@@ -70,4 +70,11 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.',
         verbose_name='user permissions',
     )
-
+    
+class ThemeConfiguration(models.Model):
+    THEME_CHOICES = [
+        ('dark', 'Dark'),
+        ('light', 'Light'),
+    ]
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    theme = models.CharField(max_length=5, choices=THEME_CHOICES, default='light')

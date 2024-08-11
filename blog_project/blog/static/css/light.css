@@ -1,0 +1,10 @@
+body {
+    background-color: #e0f7fa; /* Light background */
+    color: #171818; /* Dark text color */
+}
+.navbar {
+    background-color: #4db6ac; /* Light navbar */
+}
+.footer {
+    background-color: #e0f7fa; /* Light footer */
+}

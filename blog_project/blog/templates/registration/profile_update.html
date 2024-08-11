@@ -1,14 +1,22 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block title %}Update Profile{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Update Profile</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
+<div class="container" style="padding-top: 15px;">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <div class="text-center">
+                <img src="{% static 'images/logo.png' %}" alt="App Logo" class="mb-4" style="width: 100px;">
+            </div>
+            <h2 class="text-center">Update Profile</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
