@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 from . import views
 
@@ -9,4 +11,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', views.signup, name='signup'),
     path('accounts/profile/', views.profile, name='profile'),
-]
+    path('accounts/profile/update/', views.profile_update, name='profile_update'),
+    path('accounts/profile/<str:username>/', views.user_profile, name='user_profile'),
+    path('community/', views.community, name='community'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Post, Comment, Reaction
-from .forms import PostForm, CommentForm, SignUpForm
+from .models import Post, Comment, Reaction, Category
+from .forms import PostForm, CommentForm, CustomUserCreationForm, CustomUserChangeForm
 from django.db.models import Q, Count, Sum, F
 from django.core.paginator import Paginator
 from django.http import JsonResponse
@@ -38,8 +38,6 @@ def post_list(request):
         'trending_posts': trending_posts,
     }
     return render(request, 'blog/post_list.html', context)
-
-
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -96,7 +94,7 @@ def post_edit(request, pk):
 
 def signup(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -105,8 +103,32 @@ def signup(request):
             login(request, user)
             return redirect('post_list')
     else:
-        form = SignUpForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
 
 def profile(request):
     return render(request, 'registration/profile.html')
+
+@login_required
+def profile_update(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    return render(request, 'registration/profile_update.html', {'form': form})
+
+def community(request):
+    categories = Category.objects.all()
+    context = {
+        'categories': categories,
+    }
+    return render(request, 'blog/community.html', context)
+
+def user_profile(request, username):
+    user = get_object_or_404(get_user_model(), username=username)
+    return render(request, 'registration/user_profile.html', {'profile_user': user})
+
+

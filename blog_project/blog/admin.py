@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Post, Comment
+from django.contrib.auth.admin import UserAdmin
+from .models import Post, Comment, CustomUser
+
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('profile_picture',)}),
+    )
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('author', 'post', 'created_at')  # Removed 'is_approved'
@@ -13,3 +20,4 @@ class CommentAdmin(admin.ModelAdmin):
 
 admin.site.register(Post)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)

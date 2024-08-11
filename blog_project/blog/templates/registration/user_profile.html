@@ -1,0 +1,11 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ profile_user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<h2>{{ profile_user.username }}'s Profile</h2>
+<img src="{% if profile_user.profile_picture %}{{ profile_user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" class="rounded-circle" height="100" alt="Profile Picture">
+<p>Username: {{ profile_user.username }}</p>
+<p>Email: {{ profile_user.email }}</p>
+<a href="{% url 'post_list' %}" class="btn btn-primary">Back to Blog</a>
+{% endblock %}

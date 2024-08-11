@@ -49,28 +49,72 @@
             background-color: #00251a !important; /* Darker teal for hover state */
             border-color: #00251a !important;
         }
+        .profile-picture {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+        .nav-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-icon i {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <a class="navbar-brand" href="{% url 'post_list' %}">Shecktar Blog</a>
+        <form class="form-inline my-2 my-lg-0 ml-3">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link nav-icon" href="{% url 'post_list' %}">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-icon" href="#">
+                        <i class="fas fa-users"></i>
+                        <span>Community</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-icon" href="#">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+            </ul>
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" class="rounded-circle profile-picture" alt="Profile Picture">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'profile_update' %}">Update Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        </div>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                        <a class="nav-link" href="{% url 'login' %}">Sign In</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
