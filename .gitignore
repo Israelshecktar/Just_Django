@@ -163,3 +163,4 @@ cython_debug/
 node_modules/
 package_lock.json
 migrations/
+media/
