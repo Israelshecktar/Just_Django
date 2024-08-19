@@ -28,6 +28,8 @@ jobs:
     - name: List Files
       run: ls -R
     - name: Run Tests
+      env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
         cd blog_project
         python manage.py test
