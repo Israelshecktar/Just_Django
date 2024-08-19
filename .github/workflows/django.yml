@@ -29,4 +29,5 @@ jobs:
       run: ls -R
     - name: Run Tests
       run: |
-        python blog_project/manage.py test
+        cd blog_project
+        python manage.py test
